@@ -83,16 +83,9 @@ exports.getPostsByUser = async (req, res) => {
 };
 
 exports.updatePost = asyncHandler(async (req, res, next) => {
-  //const { _id } = req.params;
   // console.log(req.params.id);
-  // const { title, content, imageCover } = req.body;
-  // const update = {
-  //   title,
-  //   content,
-  //   imageCover,
-  //   _id: req.params.id,
-  // };
-  console.log(req.body);
+  //console.log(req.body); //undefined
+
   const postToUpdate = await Post.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });

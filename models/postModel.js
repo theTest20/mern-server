@@ -37,11 +37,11 @@ const postSchema = new mongoose.Schema(
 );
 
 //Virtual Populate
-postSchema.virtual('comments', {
-  ref: 'Comments',
-  foreignField: 'post',
-  localField: '_id',
-});
+// postSchema.virtual('comments', {
+//   ref: 'Comments',
+//   foreignField: 'post',
+//   localField: '_id',
+// });
 
 // postSchema.pre('save', function (next) {
 //   this.slug = slugify(this.name, { lower: true });

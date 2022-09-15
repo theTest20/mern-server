@@ -42,13 +42,13 @@ exports.signup = asyncHandler(async (req, res, next) => {
 
   const token = createVerifyToken(newUser._id);
   const url = `${req.protocol}://${req.get('host')}/verify/${token}`;
+  new Email(newUser, url).sendWelcomeVerify();
   res.status(200).json({
     token,
     data: {
       newUser,
     },
   });
-  await new Email(newUser, url).sendWelcomeVerify();
 });
 
 exports.activateAccount = asyncHandler(async (req, res, next) => {

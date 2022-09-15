@@ -1,17 +1,17 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+//const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
-//const xss = require('xss-clean');
-const cookieParser = require('cookie-parser');
+
 const cors = require('cors');
 //const compression = require('compression');
 const CustomizeError = require('./utils/customizeError');
 const globalErrorHandler = require('./controllers/errorController');
 const postRouter = require('./routes/postRoutes');
 const userRouter = require('./routes/userRoutes');
-const commentRouter = require('./routes/commentRoutes');
+//const commentRouter = require('./routes/commentRoutes');
 
 const app = express();
 
@@ -34,7 +34,6 @@ app.use('/api', limiter);
 //Body-parser, reading data from body into req.body
 app.use(express.json({ limit: '200mb' }));
 app.use(express.urlencoded({ limit: '200mb', extended: true }));
-app.use(cookieParser());
 
 //Data Sanitization against NoSQL query Injection
 //app.use(mongoSanitize());
