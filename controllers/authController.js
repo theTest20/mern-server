@@ -231,6 +231,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 exports.updatePassword = asyncHandler(async (req, res, next) => {
   //1. Get the user from the collection
   const user = await User.findById(req.user.id).select('+password');
+
   //2. Check if POSTED password is correct
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new CustomizeError('Your current password is wrong!', 401));

@@ -17,22 +17,22 @@ router.use(authController.protect);
 
 router.patch('/updateMyPassword/', authController.updatePassword);
 
-// router.get('/me', userController.getMe, userController.getUser);
-// router.patch(
-//   '/updateMe',
-//   userController.uploadUserPhoto,
-//   userController.resizeUserPhoto,
-//   userController.updateMe
-// );
+router.get('/me', userController.getMe, userController.getUser);
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 
 router.delete('/deleteMe', userController.deleteMe);
 
 //router.use(authController.restrictTo('admin'));
 router.route('/').get(userController.getAllUsers);
 //.post(userController.createUser); //add after logout operation is available
-router
-  .route('/:id')
-  .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+// router
+//   .route('/:id')
+//   .get(userController.getUser)
+//   .patch(userController.updateUser)
+//   .delete(userController.deleteUser);
 module.exports = router;
