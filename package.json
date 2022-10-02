@@ -4,7 +4,8 @@
   "description": "backend for blog app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "start:dev": "nodemon server.js"
   },
   "author": "lirilindaRubovci",
   "license": "ISC",
