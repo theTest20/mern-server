@@ -17,10 +17,10 @@ mongoose
   })
   .then(() => console.log('DB was successfully connected!'));
 
-const port = process.env.PORT || 8000;
+//const port = process.env.PORT || 8000;
 
-const server = app.listen(port, () => {
-  console.log(`App running at port ${port}...`);
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log(`App running at port ${process.env.PORT || 8000}...`);
 });
 
 //global handling of rejected promises/unhandled rejections
