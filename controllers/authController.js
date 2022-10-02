@@ -32,7 +32,7 @@ const createVerifyToken = (id) => {
 };
 
 exports.signup = asyncHandler(async (req, res, next) => {
-  const newUser = await User.create({
+  const user = await User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
@@ -40,15 +40,10 @@ exports.signup = asyncHandler(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const token = createVerifyToken(newUser._id);
+  const token = createVerifyToken(user._id);
   const url = `${req.protocol}://${req.get('host')}/verify/${token}`;
-  new Email(newUser, url).sendWelcomeVerify();
-  res.status(200).json({
-    token,
-    data: {
-      newUser,
-    },
-  });
+  new Email(user, url).sendWelcomeVerify();
+  createSendToken(user, 200, res);
 });
 
 exports.activateAccount = asyncHandler(async (req, res, next) => {
@@ -82,6 +77,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!(await user.correctPassword(password, user.password))) {
     return next(new CustomizeError('Incorrect email or password', 404));
   }
+
   const token = signToken(user._id);
   //--> verification on Front side not yet available
   // if (!user.verified) {
