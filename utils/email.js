@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const { htmlToText } = require('html-to-text');
-const ejs = require('ejs');
 
 module.exports = class Email {
   constructor(user, url) {
@@ -25,12 +24,14 @@ module.exports = class Email {
   //Send the actual email
   async send(template, subject) {
     const htmlV = `<p>Hello, ${this.firstName}</p>
-    <p>We are glad to have you here! Please verify your account by clicking on the link below</p>
-      <a href="${this.url}">Verify</a>`;
+    <p>We are glad to have you here!</p>
+    <p> Our goal is to help people with simple explanation on important Tech topics.</p>
+    <p>With TechBlog account you can make this happen!<p/>
+    <p>If you have any question please write us at</p> <a href="${process.env.EMAIL_FROM}"</a>`;
     const htmlR = `<p>Hello, ${this.firstName}</p>
-     <p>A request to reset password was sent, if this wasn't you, ignore this email.</p>
+     <p>A request to reset password was sent, if this wasn't you ignore this email.</p>
       <p>Otherwise, please reset your account by clicking on the link below</p>
-      <a href="${this.url}">Verify</a>`;
+      <a href="${this.url}">Reset Password Link</a>`;
     const html = template === 'welcome' ? htmlV : htmlR;
     //1. Define email options
     const mailOptions = {
@@ -45,7 +46,7 @@ module.exports = class Email {
     await this.newTransporter().sendMail(mailOptions);
   }
 
-  async sendWelcomeVerify() {
+  async sendWelcome() {
     await this.send('welcome', `Welcome to the Blog App Family!`);
   }
 

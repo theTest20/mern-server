@@ -14,7 +14,7 @@ const commentsSchema = new mongoose.Schema(
     },
     post: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Post', //parent referencing
+      ref: 'Post',
     },
     user: {
       type: mongoose.Schema.ObjectId,

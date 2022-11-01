@@ -25,12 +25,6 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-const createVerifyToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_VERIFY_SECRET, {
-    expiresIn: process.env.JWT_VERIFY_EXPIRES_IN,
-  });
-};
-
 exports.signup = asyncHandler(async (req, res, next) => {
   const user = await User.create({
     firstName: req.body.firstName,
@@ -40,26 +34,8 @@ exports.signup = asyncHandler(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const token = createVerifyToken(user._id);
-  const url = `${req.protocol}://${req.get('host')}/verify/${token}`;
-  new Email(user, url).sendWelcomeVerify();
+  await new Email(user).sendWelcome();
   createSendToken(user, 200, res);
-});
-
-exports.activateAccount = asyncHandler(async (req, res, next) => {
-  const { activateToken } = req.body;
-  const decoded_JWT = await promisify(jwt.verify)(
-    activateToken,
-    process.env.JWT_VERIFY_SECRET
-  );
-  const user = await User.findById(decoded_JWT.id);
-  if (user) user.verified = true;
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    data: decoded_JWT,
-    msg: 'Account has been verified, please go at login page!',
-  });
 });
 
 exports.login = asyncHandler(async (req, res, next) => {
@@ -79,17 +55,6 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   const token = signToken(user._id);
-  //--> verification on Front side not yet available
-  // if (!user.verified) {
-  //   return next(
-  //     new CustomizeError(
-  //       'Your account is not verified, please check your email for verification link!',
-  //       401
-  //     )
-  //   );
-  // }
-
-  //If everyting OK, send Token
   //Remove password from output
   user.password = undefined;
   res.status(200).json({
@@ -165,21 +130,19 @@ exports.restrictTo = (...roles) => {
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   //1. Get User based on posted email
   const user = await User.findOne({ email: req.body.email });
+
   if (!user) {
     return next(
       new CustomizeError('There is no user with that email address.', 404)
     );
   }
   //2. Generate the random reset token
-  const resetToken = user.createPasswordResetToken();
+  const resetToken = user.createPassResetToken();
   await user.save({ validateBeforeSave: false });
 
   //3.Send it to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/users/resetPassword/${resetToken}`;
-
+    const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
     await new Email(user, resetURL).sendPasswordReset();
     res.status(200).json({
       status: 'success',
@@ -220,8 +183,12 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   //3. Update the passwordChangedAt property for the user
   // updated on userModel line 66/pre save middleware
-  //4. Log the user in, send JTW
-  createSendToken(user, 200, res);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
 });
 
 exports.updatePassword = asyncHandler(async (req, res, next) => {
@@ -238,6 +205,11 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   await user.save();
   //User.findByIdandUpdate() won't work as intended.
 
-  //4.Log in user, send TOKEN
-  createSendToken(user, 200, res);
+  //4.Send response
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
 });

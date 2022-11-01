@@ -83,9 +83,6 @@ exports.getPostsByUser = async (req, res) => {
 };
 
 exports.updatePost = asyncHandler(async (req, res, next) => {
-  // console.log(req.params.id);
-  //console.log(req.body); //undefined
-
   const postToUpdate = await Post.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
