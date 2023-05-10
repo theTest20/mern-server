@@ -5,6 +5,7 @@ const User = require('./../models/userModel');
 const CustomizeError = require('./../utils/customizeError');
 const Email = require('../utils/email');
 const asyncHandler = require('express-async-handler');
+//const validator = require('validator');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -26,6 +27,9 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = asyncHandler(async (req, res, next) => {
+  //  if(!validator.isEmail(req.body.email)){
+  //   return next(new CustomizeError('Please provide a valid email', 404));
+  //  }
   const user = await User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
