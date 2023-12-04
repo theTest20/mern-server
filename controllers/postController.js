@@ -80,7 +80,7 @@ exports.getAllPosts = asyncHandler(async (req, res, next) => {
 
 exports.getPost = asyncHandler(async (req, res, next) => {
  
-  const post = await Post.findById(req.params.id);
+  const post = await Post.findById(req.params.id).populate('userImage', 'firstName photo');
   if (!post) {
     return next(new CustomizeError('No such post exist!', 404));
   }

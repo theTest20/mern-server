@@ -7,27 +7,41 @@ module.exports = class Email {
     this.firstName = user.firstName;
 
     this.url = url;
-    this.from = `Blog App Admin <${process.env.EMAIL_FROM}>`;
+    this.from = `TechBlog App Team  <${process.env.EMAIL_FROM}>`;
   }
 
-  newTransporter() {
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+  //using mailtrap
+  // newTransporter() {
+  //   return nodemailer.createTransport({
+  //     host: process.env.EMAIL_HOST,
+  //     port: process.env.EMAIL_PORT,
+  //     auth: {
+  //       user: process.env.EMAIL_USERNAME,
+  //       pass: process.env.EMAIL_PASSWORD,
+  //     },
+  //   });
+  // }
+
+  //Using Gmail Account
+  newTransporter(){
+   return nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+      user:process.env.EMAIL_REAL,
+      pass: process.env.EMAIL_REALPASS,
+    }
+   })
   }
 
   //Send the actual email
   async send(template, subject) {
     const htmlV = `<p>Hello, ${this.firstName}</p>
     <p>We are glad to have you here!</p>
-    <p> Our goal is to help people with simple explanation on important Tech topics.</p>
-    <p>With TechBlog account you can make this happen!<p/>
-    <p>If you have any question please write us at</p> <a href="${process.env.EMAIL_FROM}"</a>`;
+    <p> Our goal is to help people with simple explanation on important Tech topics.<p/>
+    <p>With TechBlog account you can make this happen!</p>
+    <br>
+    <p>Best,</p>
+    <p>TechBlog Team</p>`;
     const htmlR = `<p>Hello, ${this.firstName}</p>
      <p>A request to reset password was sent, if this wasn't you ignore this email.</p>
       <p>Otherwise, please reset your account by clicking on the link below</p>

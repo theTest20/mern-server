@@ -22,9 +22,7 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       //required: [true, 'Story must belong to a user'],
     },
-    firstName: {
-      type: String,
-    },
+   
     createdAt: {
       type: Date,
       default: Date.now(),
@@ -36,17 +34,12 @@ const postSchema = new mongoose.Schema(
   }
 );
 
-//Virtual Populate
-// postSchema.virtual('comments', {
-//   ref: 'Comments',
-//   foreignField: 'post',
-//   localField: '_id',
-// });
 
-// postSchema.pre('save', function (next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+postSchema.virtual('userImage', {
+  ref: 'User',
+  localField: 'publisher',
+  foreignField: '_id',
+});
 
 postSchema.pre(/^find/, function (next) {
   this.populate({
@@ -55,6 +48,7 @@ postSchema.pre(/^find/, function (next) {
   });
   next();
 });
+
 
 const Post = mongoose.model('Post', postSchema);
 module.exports = Post;
