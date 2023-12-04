@@ -1,8 +1,7 @@
 NODE_ENV=development
 PORT=5000
 
-JWT_SECRET=my-very-first-secret-ultra-long-safety
-JWT_EXPIRES_IN=1h
+
 
 
 
